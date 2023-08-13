@@ -5,6 +5,7 @@ export default class Table {
     this.tableElem = element;
     this.data = data;
     const propsForSorting = new PropsForSorting(data);
+    this.sortedProps = propsForSorting.sortedProps;
     this.props = propsForSorting.props;
     this.sortedIdx = 0;
 
@@ -39,14 +40,27 @@ export default class Table {
       }
     }
 
+    let trsHTML = '<tr>';
+    for (const prop of this.props) {
+      if (prop === field && asc) {
+        trsHTML += `<th>${field} &uarr;</th>`;
+      } else if (prop === field) {
+        trsHTML += `<th>${field} &darr;</th>`;
+      } else {
+        trsHTML += `<th>${prop}</th>`;
+      }
+    }
+    trsHTML += '</tr>';
+    this.tableElem.innerHTML = trsHTML;
+
     this.render();
   }
 
   newSort() {
-    this.tableElem.innerHTML = '<tr><th>id</th><th>title</th><th>imdb</th><th>year</th></tr>';
+    // this.tableElem.innerHTML = '<tr><th>id</th><th>title</th><th>imdb</th><th>year</th></tr>';
 
-    this.sort(this.props[this.sortedIdx].value, this.props[this.sortedIdx].asc);
-    if (this.sortedIdx < this.props.length - 1) {
+    this.sort(this.sortedProps[this.sortedIdx].value, this.sortedProps[this.sortedIdx].asc);
+    if (this.sortedIdx < this.sortedProps.length - 1) {
       this.sortedIdx++;
     } else {
       this.sortedIdx = 0;
